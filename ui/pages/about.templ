@@ -1,0 +1,74 @@
+package pages
+
+import (
+	"github.com/axzilla/templui-quickstart/ui/components/button"
+	"github.com/axzilla/templui-quickstart/ui/layouts"
+)
+
+templ About() {
+	@layouts.BaseLayout() {
+		<div class="flex justify-center items-center min-h-screen">
+			<div class="flex flex-col gap-6 items-center justify-center px-4 w-full max-w-3xl py-16">
+				<div class="text-center space-y-4">
+					<h1 class="text-4xl font-bold">🌟 About the Project</h1>
+					<p class="text-muted-foreground text-lg">
+						The templUI Quickstart project serves as a foundational example for building modern web applications using long-running HTML and gRPC.
+						Our goal is to provide developers with a streamlined approach to creating responsive and interactive user interfaces.
+					</p>
+					<p class="text-muted-foreground text-lg">
+						With templUI, you can easily integrate gRPC services to handle real-time data and long-running processes, ensuring a smooth user experience.
+						Explore the capabilities of templUI and see how it can enhance your projects!
+					</p>
+				</div>
+				<div class="flex gap-3">
+					@button.Button(button.Props{
+						Variant: "default",
+						Href:    "https://templui.io",
+						Target:  "_blank",
+					}) {
+						Templ UI Documentation
+					}
+					@button.Button(button.Props{
+						Variant: "outline",
+						Href:    "https://github.com/themikemoniker/golang-templUI-example",
+						Target:  "_blank",
+					}) {
+						GitHubi
+					}
+				</div>
+				<!-- New Section for Long-Running Task -->
+				<div class="mt-8">
+					<button id="startTaskButton" class="btn btn-primary" onclick="startTask()">Start Long Running Task</button>
+					<div id="taskId" class="mt-4"></div>
+					<div id="taskStatus" class="mt-2"></div>
+				</div>
+			</div>
+		</div>
+		<script>
+			function startTask() {
+				fetch('/longtask', {
+					method: 'POST',
+				})
+				.then(response => response.json())
+				.then(data => {
+					document.getElementById('taskId').innerText = `Task ID: ${data.id}`;
+					checkTaskStatus(data.id); // Start checking the status
+				})
+				.catch(error => console.error('Error starting task:', error));
+			}
+
+			function checkTaskStatus(taskId) {
+				fetch(`/taskstatus?id=${taskId}`)
+				.then(response => response.json())
+				.then(data => {
+					document.getElementById('taskStatus').innerText = `Status: ${data.status}`;
+					if (data.status === "In Progress") {
+						// Check status again after 2 seconds
+						setTimeout(() => checkTaskStatus(taskId), 2000);
+					}
+				})
+				.catch(error => console.error('Error checking task status:', error));
+			}
+		</script>
+	}
+}
