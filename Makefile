@@ -1,5 +1,5 @@
-# Run templ generation in watch mode to detect all .templ files and 
-# re-create _templ.txt files on change, then send reload event to browser. 
+# Run templ generation in watch mode to detect all .templ files and
+# re-create _templ.txt files on change, then send reload event to browser.
 # Default url: http://localhost:7331
 templ:
 	templ generate --watch --proxy="http://localhost:8090" --open-browser=false
@@ -7,7 +7,7 @@ templ:
 # Run air to detect any go file changes to re-build and re-run the server.
 server:
 	air \
-	--build.cmd "go build -o tmp/bin/main ./main.go" \
+	--build.cmd "go build -o tmp/bin/main ." \
 	--build.bin "tmp/bin/main" \
 	--build.delay "100" \
 	--build.exclude_dir "node_modules" \

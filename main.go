@@ -16,6 +16,9 @@ func main() {
 	mux := http.NewServeMux()
 	SetupAssetsRoutes(mux)
 	mux.Handle("GET /", templ.Handler(pages.Landing()))
+	mux.Handle("GET /about", templ.Handler(pages.About()))
+	mux.Handle("POST /longtask", http.HandlerFunc(StartLongRunningTask)) // Call function from longtask.go
+	mux.Handle("GET /taskstatus", http.HandlerFunc(CheckTaskStatus))      // Call function from longtask.go
 	fmt.Println("Server is running on http://localhost:8090")
 	http.ListenAndServe(":8090", mux)
 }
